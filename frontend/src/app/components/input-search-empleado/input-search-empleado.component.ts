@@ -65,7 +65,7 @@ export class InputSearchEmpleadoComponent {
   }
 
   onAddByText() {
-    const empleado = this.empleados.find((p: Empleado) => p.idEmpleado === this.model.idEmpleado);
+    const empleado = this.empleados.find((p: Empleado) => +p.idEmpleado === +this.model);
 
     if (!empleado) {
       return;
@@ -80,7 +80,7 @@ export class InputSearchEmpleadoComponent {
     this.onChange(empleado);
   }
 
-  removeFromSelectedTag(empleado: Empleado): void {
+  removeFromSelected(empleado: Empleado): void {
     this.empleado = undefined;
 
     this.onChange(undefined);

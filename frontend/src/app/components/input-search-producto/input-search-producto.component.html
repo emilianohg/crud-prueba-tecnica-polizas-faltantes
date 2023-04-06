@@ -1,9 +1,9 @@
 <ng-template #rt let-r="result" let-t="term">
-    <ngb-highlight [result]="r.nombre + ' ' + r.apellido " [term]="t"></ngb-highlight>
+    <ngb-highlight [result]="r.nombre" [term]="t"></ngb-highlight>
 </ng-template>
 
 <div class="form-group">
-    <label for="select-input">Selecciona un empleado:</label>
+    <label for="select-input">Selecciona un producto:</label>
 
     <input
         id="select-input"
@@ -19,15 +19,15 @@
         #instance="ngbTypeahead"
     >
 </div>
-<div class="selected" *ngIf="empleado">
+<div class="selected" *ngIf="producto">
     <div class="selected__info">
         <div>
-            <b>{{empleado.nombre}} {{ empleado.apellido }}</b>
+            <b>{{producto.sku}} {{ producto.nombre }}</b>
         </div>
-        <span>{{empleado.puesto.nombre}}</span>
+        <span>{{producto.cantidad}}</span>
     </div>
     <div class="selected__actions">
-        <button class="btn" (click)="removeFromSelected(empleado)">
+        <button class="btn" (click)="removeFromSelected(producto)">
             <i class="fa fa-trash"></i>
         </button>
     </div>

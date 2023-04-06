@@ -8,5 +8,21 @@
                     alt="Logo"
             /></a>
         </div>
+        <div class="nav__user">
+            <div ngbDropdown placement="bottom-end" class="d-inline-block">
+                <button type="button" class="btn btn-outline" id="dropdownUser" ngbDropdownToggle>
+                    <span>
+                        <img class="nav__avatar" src="assets/default-avatar.png" alt="Avatar imagen">
+                    </span>
+                    <span class="nav__username">Usuario</span>
+                </button>
+                <div ngbDropdownMenu aria-labelledby="dropdownUser">
+                    <button ngbDropdownItem (click)="logout()">
+                        <i class="fas fa-sign-out-alt"></i>
+                        Cerrar sesión
+                    </button>
+                </div>
+            </div>
+        </div>
     </div>
 </nav>

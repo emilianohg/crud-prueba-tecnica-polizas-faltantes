@@ -1,11 +1,47 @@
 .nav {
     background: #fff;
+    display: flex;
+    justify-content: center;
 }
 
 .nav__container {
     margin: 0 20px;
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    max-width: 60rem;
 }
 
 .nav__logo img {
-    height: 60px;
+    height: 70px;
+}
+
+.nav__user {
+    display: flex;
+    align-items: center;
+}
+
+.nav__user button {
+    display: flex;
+    border: none;
+    text-decoration: none;
+    color: #000;
+    justify-content: center;
+    align-items: center;
+    gap: 0.3rem;
+
+    .nav__avatar {
+        height: 3rem;
+        width: 3rem;
+        border: solid 1px #ced4da;
+        border-radius: 50%;
+    }
+
+    .nav__username {
+        margin-left: 1rem;
+    }
+}
+
+.dropdown-toggle::after {
+    margin-left: 1rem;
 }

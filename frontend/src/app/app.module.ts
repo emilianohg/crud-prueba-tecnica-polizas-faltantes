@@ -15,7 +15,11 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { LoginComponent } from './pages/login/login.component';
 import { InputSearchEmpleadoComponent } from './components/input-search-empleado/input-search-empleado.component';
-import { NgbTypeaheadModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModule, NgbPaginationModule, NgbTypeaheadModule } from '@ng-bootstrap/ng-bootstrap';
+import { InputSearchProductoComponent } from './components/input-search-producto/input-search-producto.component';
+import { DeletePolizaComponent } from './pages/delete-poliza/delete-poliza.component';
+import { EditPolizaComponent } from './pages/edit-poliza/edit-poliza.component';
+import { ShowPolizaComponent } from './pages/show-poliza/show-poliza.component';
 
 @NgModule({
   declarations: [
@@ -28,6 +32,10 @@ import { NgbTypeaheadModule } from '@ng-bootstrap/ng-bootstrap';
     CreatePolizaComponent,
     LoginComponent,
     InputSearchEmpleadoComponent,
+    InputSearchProductoComponent,
+    DeletePolizaComponent,
+    EditPolizaComponent,
+    ShowPolizaComponent,
   ],
   imports: [
     CommonModule,
@@ -37,6 +45,8 @@ import { NgbTypeaheadModule } from '@ng-bootstrap/ng-bootstrap';
     ReactiveFormsModule,
     HttpClientModule,
     NgbTypeaheadModule,
+    NgbPaginationModule,
+    NgbModule,
   ],
   providers: [
     {

@@ -20,13 +20,14 @@ export class CreatePolizaComponent {
   ) {
     this.form = this.fb.group({
       empleadoGenero: [null, [Validators.required]],
-      sku: [null, [Validators.required]],
+      producto: [null, [Validators.required]],
       cantidad: [null, [Validators.required, Validators.min(1)]],
       observaciones: [null, [Validators.required]],
     });
   }
 
   save() {
+
     this.form.markAllAsTouched();
     
     if (this.form.invalid) {
@@ -35,13 +36,18 @@ export class CreatePolizaComponent {
 
     const data = this.form.value;
 
-    this.polizasService.create(data).subscribe({
+    this.polizasService.create({
+      idEmpleadoGenero: data.empleadoGenero.idEmpleado,
+      sku: data.producto.sku,
+      cantidad: data.cantidad,
+      observaciones: data.observaciones,
+    }).subscribe({
       next: (response) => {
         Swal.fire({
           icon: 'success',
           title: 'Poliza creada correctamente',
         });
-        this.router.navigateByUrl('/list-polizas');
+        this.router.navigateByUrl('/polizas');
       },
       error: (error) => {
         console.error(error);
@@ -51,8 +57,6 @@ export class CreatePolizaComponent {
         });
       }
     });
-
-
   }
 
 }

@@ -1,0 +1,101 @@
+<nav class="nav-breadcrumb" aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a routerLink="/polizas">Pólizas de faltantes</a></li>
+        <li *ngIf="poliza" class="breadcrumb-item active" aria-current="page">
+            Eliminar póliza <i class="fa fa-hashtag"></i> {{ poliza.idPoliza }}
+        </li>
+    </ol>
+</nav>
+
+<div class="card" *ngIf="poliza">
+    <div class="card-body" *ngIf="poliza">
+
+        <form 
+            [formGroup]="form"
+            (submit)="save()"
+        >
+            
+            <div class="form-group">
+                <label for="motivoEliminacion">Motivo de la eliminación</label>
+                <textarea
+                    appFeedback
+                    #motivoEliminacion="appFeedback"
+                    id="motivoEliminacion"
+                    formControlName="motivoEliminacion"
+                    class="form-control"
+                    rows="6"
+                ></textarea>
+                <app-feedback-error
+                    [control]="motivoEliminacion.control()"
+                    fieldName="motivoEliminacion"
+                ></app-feedback-error>
+            </div>
+
+
+            <div class="row control">
+                <div class="col control__buttons">
+                    <button class="btn btn-primary" type="submit">
+                        Guardar
+                    </button>
+                </div>
+            </div>
+
+            <hr>
+        </form>
+
+        <div class="row mt-4">
+            <div class="col-sm-12">
+                <div class="form-group">
+                    <label for="empleado">Empleado</label>
+                    <input
+                        id="empleado"
+                        [value]="nombreCompleto"
+                        class="form-control"
+                        readonly
+                    />
+                </div>
+            </div>
+        </div>
+            
+        <div class="row">
+            <div class="col-md-3 col-sm-12">
+                <div class="form-group">
+                    <label for="cantidad">Cantidad</label>
+                    <input
+                        id="cantidad"
+                        type="number"
+                        class="form-control"
+                        [value]="poliza.cantidad"
+                        readonly
+                    />
+                </div>
+            </div>
+            <div class="col-md-9 col-sm-12">
+                <div class="form-group">
+                    <label for="producto">Producto</label>
+                    <input
+                        id="producto"
+                        type="text"
+                        [value]="producto"
+                        class="form-control"
+                        readonly
+                    />
+                </div>
+            </div>
+        </div>
+            
+        <div class="form-group">
+            <label for="observaciones">Observaciones</label>
+            <textarea
+                id="observaciones"
+                class="form-control"
+                rows="6"
+                [value]="poliza.observaciones"
+                readonly
+            ></textarea>
+        </div>
+
+        
+
+    </div>
+</div>

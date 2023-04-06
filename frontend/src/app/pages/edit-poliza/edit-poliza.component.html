@@ -1,7 +1,9 @@
 <nav class="nav-breadcrumb" aria-label="breadcrumb">
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a routerLink="/polizas">Pólizas de faltantes</a></li>
-        <li class="breadcrumb-item active" aria-current="page">Crear póliza</li>
+        <li *ngIf="poliza" class="breadcrumb-item active" aria-current="page">
+            Editar póliza <i class="fa fa-hashtag"></i> {{ poliza.idPoliza }}
+        </li>
     </ol>
 </nav>
 

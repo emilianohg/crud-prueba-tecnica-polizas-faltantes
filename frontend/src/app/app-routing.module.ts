@@ -4,15 +4,21 @@ import { LoginComponent } from './pages/login/login.component';
 import { MainLayoutComponent } from './layouts/main-layout/main-layout.component';
 import { ListPolizasComponent } from './pages/list-polizas/list-polizas.component';
 import { CreatePolizaComponent } from './pages/create-poliza/create-poliza.component';
+import { EditPolizaComponent } from './pages/edit-poliza/edit-poliza.component';
+import { DeletePolizaComponent } from './pages/delete-poliza/delete-poliza.component';
+import { ShowPolizaComponent } from './pages/show-poliza/show-poliza.component';
+import { AuthGuard } from './guard/auth.guard';
 
 const routes: Routes = [
   {
-    path: 'auth',
+    path: 'login',
     component: LoginComponent,
   },
   {
     path: '',
     component: MainLayoutComponent,
+    canActivate: [AuthGuard],
+    canActivateChild: [AuthGuard],
     children: [
       {
         path: '',
@@ -26,6 +32,22 @@ const routes: Routes = [
       {
         path: 'polizas/create',
         component: CreatePolizaComponent,
+      },
+      {
+        path: 'polizas/:id',
+        component: ShowPolizaComponent,
+      },
+      {
+        path: 'polizas/:id/edit',
+        component: EditPolizaComponent,
+      },
+      {
+        path: 'polizas/:id/delete',
+        component: DeletePolizaComponent,
+      },
+      {
+        path: '**',
+        redirectTo: 'polizas',
       }
     ]
   }

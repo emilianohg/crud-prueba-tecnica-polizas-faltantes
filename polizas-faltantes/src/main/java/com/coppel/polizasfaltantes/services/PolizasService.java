@@ -3,6 +3,7 @@ package com.coppel.polizasfaltantes.services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.coppel.polizasfaltantes.exceptions.PolizaNotFoundException;
 import com.coppel.polizasfaltantes.models.Pagination;
 import com.coppel.polizasfaltantes.models.Poliza;
 import com.coppel.polizasfaltantes.models.PolizaRequest;
@@ -21,7 +22,9 @@ public class PolizasService {
 
     public Poliza findById(int idPoliza) {
         Poliza poliza = this.polizasRepository.findById(idPoliza).orElseThrow(
-            () -> new RuntimeException("Ah ocurrido un error.")
+            () -> new PolizaNotFoundException(
+                String.format("No se encontró la póliza con el id %d", idPoliza)
+            )
         );
         return poliza;
     }
@@ -29,7 +32,7 @@ public class PolizasService {
     public Poliza store(PolizaRequest polizaRequest) {
         Poliza poliza = this.polizasRepository.store(polizaRequest)
             .orElseThrow(
-                () -> new RuntimeException("Ah ocurrido un error.")
+                () -> new RuntimeException("Ha ocurrido un error al intentar grabar la póliza.")
             );
 
         return poliza;
@@ -38,7 +41,7 @@ public class PolizasService {
     public Poliza update(int idPoliza, PolizaRequest polizaRequest) {
         Poliza poliza = this.polizasRepository.update(idPoliza, polizaRequest)
             .orElseThrow(
-                () -> new RuntimeException("Ah ocurrido un error.")
+                () -> new RuntimeException("Ha ocurrido un error al intentar actualizar la póliza.")
             );
 
         return poliza;
@@ -47,7 +50,7 @@ public class PolizasService {
     public Poliza delete(int idPoliza, String motivoEliminacion) {
         Poliza poliza = this.polizasRepository.delete(idPoliza, motivoEliminacion)
             .orElseThrow(
-                () -> new RuntimeException("Ah ocurrido un error.")
+                () -> new RuntimeException("Ha ocurrido un error al intentar eliminar la póliza.")
             );
 
         return poliza;

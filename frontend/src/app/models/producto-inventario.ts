@@ -1,5 +1,5 @@
 export interface ProductoInventario {
-    SKU: String,
-    Nombre: String,
-    Cantidad: number,
+    sku: String,
+    nombre: String,
+    cantidad: number,
 }

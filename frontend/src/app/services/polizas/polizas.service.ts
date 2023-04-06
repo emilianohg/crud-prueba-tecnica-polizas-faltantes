@@ -15,8 +15,18 @@ export class PolizasService {
     private http: HttpClient,
   ) { }
 
-  getAll() {
-    return this.http.get<BaseResponse<Pagination<Poliza>>>(`${environment.apiUrl}/polizas`);
+  getAll({page = 1, limit = 10, search}: {page: number, limit: number, search?: string}) {
+
+    const params: any = {
+      page: page.toString(),
+      limit: limit.toString(),
+    };
+
+    if (search) {
+      params['search'] = search;
+    }
+
+    return this.http.get<BaseResponse<Pagination<Poliza>>>(`${environment.apiUrl}/polizas`, { params });
   }
 
   findById(id: number) {
@@ -31,7 +41,9 @@ export class PolizasService {
     return this.http.put<BaseResponse<Poliza>>(`${environment.apiUrl}/polizas/${id}`, poliza);
   }
 
-  delete(id: number) {
-    return this.http.delete<BaseResponse<Poliza>>(`${environment.apiUrl}/polizas/${id}`);
+  delete(id: number, motivoEliminacion: string) {
+    return this.http.put<BaseResponse<Poliza>>(`${environment.apiUrl}/polizas/${id}/eliminar`, {
+      motivoEliminacion: motivoEliminacion
+    });
   }
 }

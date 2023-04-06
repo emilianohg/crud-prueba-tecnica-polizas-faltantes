@@ -7,27 +7,27 @@ import { environment } from "src/environments/environment";
 
 @Injectable({
     providedIn: 'root'
-  })
-  export class EmpleadosService {
-  
-    constructor(
-      private http: HttpClient,
-    ) { }
-  
-    getAll({page = 1, limit = 10, search}: {page: number, limit: number, search?: string}) {
+})
+export class EmpleadosService {
 
-        const params: any = {
-            page: page.toString(),
-            limit: limit.toString(),
-        };
+  constructor(
+    private http: HttpClient,
+  ) { }
 
-        if (search) {
-            params['search'] = search;
-        }
+  getAll({page = 1, limit = 10, search}: {page: number, limit: number, search?: string}) {
 
-        return this.http.get<BaseResponse<Pagination<Empleado>>>(`${environment.apiUrl}/empleados`, {
-            params,
-        });
+    const params: any = {
+      page: page.toString(),
+      limit: limit.toString(),
+    };
+
+    if (search) {
+      params['search'] = search;
     }
+
+    return this.http.get<BaseResponse<Pagination<Empleado>>>(`${environment.apiUrl}/empleados`, {
+      params,
+    });
+  }
 
 }

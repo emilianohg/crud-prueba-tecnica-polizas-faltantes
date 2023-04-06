@@ -201,9 +201,9 @@ public class SqlServerPolizasRepository implements PolizasRepository {
                 producto,
                 rs.getInt("Cantidad"),
                 rs.getString("Observaciones"),
-                rs.getDate("Fecha"),
+                rs.getTimestamp("Fecha"),
                 rs.getString("MotivoEliminacion"),
-                rs.getDate("FechaEliminacion")
+                rs.getTimestamp("FechaEliminacion")
             );
         }
     }

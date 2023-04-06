@@ -1,3 +1,9 @@
+<nav class="nav-breadcrumb" aria-label="breadcrumb">
+    <ol class="breadcrumb">
+            <li class="breadcrumb-item active" aria-current="page">Pólizas de faltantes</li>
+    </ol>
+</nav>
+
 <div class="card">
     <div class="card-body">
 
@@ -7,6 +13,8 @@
                     type="text"
                     class="form-control"
                     placeholder="Buscar por ID"
+                    (input)="changeSearch($event)"
+                    [(ngModel)]="_searchText"
                 />
             </div>
             <div class="control__buttons">
@@ -14,9 +22,62 @@
                     class="btn btn-primary"
                     routerLink="/polizas/create"
                 >
-                    Agregar
+                    <i class="fa fa-plus"></i> Agregar
                 </a>
             </div>
+        </div>
+
+
+        <div *ngIf="polizas">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>
+                            <i class="fa-solid fa-hashtag"></i>
+                        </th>
+                        <th>
+                            <i class="fa-solid fa-user"></i>
+                            Empleado
+                        </th>
+                        <th>
+                            <i class="fa-solid fa-boxes-stacked"></i>
+                            Cant
+                        </th>
+                        <th>
+                            <i class="fa-solid fa-barcode"></i>
+                            Producto
+                        </th>
+                        <th>
+                            <i class="fa-solid fa-calendar"></i>
+                            Fecha
+                        </th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let poliza of polizas.records" [class.polizaEliminada]="poliza.fechaEliminacion">
+                        <td>{{ poliza.idPoliza }}</td>
+                        <td>{{ poliza.empleadoGenero.nombre }} {{ poliza.empleadoGenero.apellido }}</td>
+                        <td>{{ poliza.cantidad }}</td>
+                        <td>{{ poliza.productoInventario.nombre }}</td>
+                        <td>{{ poliza.fecha }}</td>
+                        <td>
+                            <div class="table-action">
+                                <i class="table-action__button fa fa-eye" (click)="show(poliza)"></i>
+                                <i *ngIf="!poliza.fechaEliminacion" class="table-action__button fa fa-pencil" (click)="edit(poliza)"></i>
+                                <i *ngIf="!poliza.fechaEliminacion" class="table-action__button fa fa-trash" (click)="delete(poliza)"></i>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <ngb-pagination
+                [(page)]="polizas.currentPage!"
+                [pageSize]="filters.limit!"
+                [collectionSize]="polizas.totalRecords"
+                (pageChange)="changePage($event)"
+            ></ngb-pagination>
         </div>
 
     </div>

@@ -90,7 +90,7 @@ BEGIN
         ON Empleados.IdPuesto = Puestos.IdPuesto
     INNER JOIN Inventario
         ON Polizas.SKU = Inventario.SKU
-    ORDER BY Polizas.IdPoliza
+    ORDER BY Polizas.IdPoliza DESC
     OFFSET @offset ROWS
     FETCH NEXT @limit ROWS ONLY;
 
