@@ -1,0 +1,65 @@
+version: '3.3'
+services:
+  backend:
+    build:
+      context: ./polizas-faltantes
+      dockerfile: Dockerfile
+    depends_on:
+      - sqlserver
+    ports:
+      - 8080:8080
+    volumes:
+      - ./polizas-faltantes:/app
+  
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    user: '0:0'
+    ports:
+      - 1433:1433
+    environment:
+      ACCEPT_EULA: Y
+      SA_PASSWORD: PasswordO1.
+      MSSQL_PID: Express
+      MSSQL_ENCRYPT: "false"
+    volumes:
+      - db-data:/var/opt/mssql
+
+  angular:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    working_dir: /app
+    ports:
+      - 4200:4200
+    volumes:
+      - ./frontend:/app
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+    command: ["npm","run", "start"]
+
+  kong:
+    image: kong
+    depends_on:
+      - sqlserver
+      - backend
+      - angular
+    environment:
+      KONG_PROXY_ACCESS_LOG: /dev/stdout
+      KONG_PROXY_ERROR_LOG: /dev/stdout
+      KONG_ADMIN_ACCESS_LOG: /dev/stdout
+      KONG_ADMIN_ERROR_LOG: /dev/stdout
+      KONG_PROXY_LISTEN: 0.0.0.0:80
+      KONG_ADMIN_LISTEN: 0.0.0.0:8001, 0.0.0.0:8444 ssl
+      KONG_DATABASE: 'off'
+      KONG_DECLARATIVE_CONFIG: /opt/kong/config.yaml
+    ports:
+      - 80:80
+      - 8443:8443
+      - 8001:8001
+      - 8444:8444
+    volumes:
+      - ./kong:/opt/kong
+
+
+volumes:
+  db-data:

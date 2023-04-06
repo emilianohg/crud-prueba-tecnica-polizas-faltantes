@@ -1,0 +1,4 @@
+GET http://localhost:8080/empleados?page=1&limit=10&search=Emi
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBleGFtcGxlLmNvbSIsImlhdCI6MTY4MDc1NDk5MywiZXhwIjoxNjgwODQxMzkzfQ.ubhtrrOwWdimCgwqgf1HLFIs4UQ-YAOgCUnJWhNDg5k

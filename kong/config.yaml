@@ -1,0 +1,19 @@
+_format_version: "2.1"
+_transform: true
+
+services:
+  - name: laravel-service
+    url: http://backend:8080
+    routes:
+      - name: laravel-service-routes
+        hosts:
+          - api.localhost
+        strip_path: true
+
+  - name: admin-service
+    url: http://angular:4200
+    routes:
+      - name: admin-service-routes
+        hosts:
+          - admin.localhost
+        strip_path: true
