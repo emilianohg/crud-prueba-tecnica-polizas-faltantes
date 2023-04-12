@@ -1,3 +1,3 @@
-# Diagrama de secuencia - Listar polizas
+# Diagrama de secuencia - Listar pólizas
 
-![Diagrama de secuencia - Listar polizas](../images/diagramas-de-secuencia/polizas-index.png)
+![Diagrama de secuencia - Listar pólizas](../images/diagramas-de-secuencia/polizas-index.png)
