@@ -10,11 +10,11 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.core.SqlOutParameter;
 import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.jdbc.core.simple.SimpleJdbcCall;
 import org.springframework.stereotype.Repository;
 
+import com.coppel.polizasfaltantes.components.SimpleJdbcCallFactory;
 import com.coppel.polizasfaltantes.models.Empleado;
 import com.coppel.polizasfaltantes.models.Puesto;
 import com.coppel.polizasfaltantes.models.Usuario;
@@ -26,12 +26,15 @@ import com.coppel.polizasfaltantes.repositories.UsuariosRepository;
 public class SqlServerUsuariosRepository implements UsuariosRepository {
 
     @Autowired
+    SimpleJdbcCallFactory simpleJdbcCallFactory;
+
+    @Autowired
     JdbcTemplate jdbcTemplate;
 
     @Override
     public Optional<Usuario> findByEmail(String email) {
 
-        SimpleJdbcCall jdbcCall = new SimpleJdbcCall(jdbcTemplate)
+        SimpleJdbcCall jdbcCall = simpleJdbcCallFactory.create(jdbcTemplate)
             .withProcedureName("Usuarios_ConsultarPorEmail")
             .declareParameters(
                 new SqlParameter("Email", Types.VARCHAR)
@@ -53,7 +56,7 @@ public class SqlServerUsuariosRepository implements UsuariosRepository {
 
     @Override
     public Optional<Usuario> store(UsuarioRegistroRequest usuario) {
-        SimpleJdbcCall jdbcCall = new SimpleJdbcCall(jdbcTemplate)
+        SimpleJdbcCall jdbcCall = simpleJdbcCallFactory.create(jdbcTemplate)
             .withProcedureName("Usuarios_Registrar")
             .declareParameters(
                 new SqlParameter("Email", Types.VARCHAR),

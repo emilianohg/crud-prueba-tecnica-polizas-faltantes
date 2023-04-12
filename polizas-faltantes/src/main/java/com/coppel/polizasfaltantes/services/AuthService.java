@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import com.coppel.polizasfaltantes.components.jwt.JWTManager;
 import com.coppel.polizasfaltantes.exceptions.CredencialesIncorrectasException;
 import com.coppel.polizasfaltantes.exceptions.UsuarioEmailExistException;
+import com.coppel.polizasfaltantes.exceptions.UsuarioNoSePudoRegistrarException;
 import com.coppel.polizasfaltantes.models.JWTResponse;
 import com.coppel.polizasfaltantes.models.Usuario;
 import com.coppel.polizasfaltantes.models.UsuarioRegistroRequest;
@@ -62,14 +63,17 @@ public class AuthService {
         );
     }
     
-    public Optional<Usuario> register(UsuarioRegistroRequest usuarioRequest) {
+    public Usuario register(UsuarioRegistroRequest usuarioRequest) {
 
         if (usuariosRepository.existsByEmail(usuarioRequest.getEmail())) {
-            throw new UsuarioEmailExistException("El email ya existe");
+            throw new UsuarioEmailExistException("El correo ya se encuentra registrado, intenta con otro");
         }
 
         usuarioRequest.setPassword(encoder.encode(usuarioRequest.getPassword()));
 
-        return usuariosRepository.store(usuarioRequest);
+        Usuario usuario = usuariosRepository.store(usuarioRequest)
+            .orElseThrow(() -> new UsuarioNoSePudoRegistrarException());
+
+        return usuario;
     }
 }

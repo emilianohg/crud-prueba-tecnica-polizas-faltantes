@@ -1,4 +1,4 @@
-package com.coppel.polizasfaltantes.exceptions;
+package com.coppel.polizasfaltantes.exceptions.polizas;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;

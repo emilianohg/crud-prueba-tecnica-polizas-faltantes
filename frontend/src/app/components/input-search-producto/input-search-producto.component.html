@@ -5,30 +5,30 @@
 <div class="form-group">
     <label for="select-input">Selecciona un producto:</label>
 
-    <input
-        id="select-input"
-        type="text"
-        class="form-control"
-        [(ngModel)]="model"
-        [ngbTypeahead]="search"
-        [resultTemplate]="rt"
-        (selectItem)="onSelect($event)"
-        [disabled]="isDisabled"
-        (focus)="focus$.next($any($event).target.value)"
-        (click)="click$.next($any($event).target.value)"
-        #instance="ngbTypeahead"
-    >
-</div>
-<div class="selected" *ngIf="producto">
-    <div class="selected__info">
-        <div>
-            <b>{{producto.sku}} {{ producto.nombre }}</b>
-        </div>
-        <span>{{producto.cantidad}}</span>
-    </div>
-    <div class="selected__actions">
-        <button class="btn" (click)="removeFromSelected(producto)">
-            <i class="fa fa-trash"></i>
+    <div class="input-group">
+        <input
+            id="select-input"
+            type="text"
+            class="form-control"
+            [(ngModel)]="producto"
+            [ngbTypeahead]="search"
+            [resultTemplate]="rt"
+            (selectItem)="onSelect($event)"
+            [disabled]="isDisabled"
+            [inputFormatter]="formatter"
+            (blur)="onChangeText($event)"
+            #instance="ngbTypeahead"
+        >
+        <button
+            class="btn btn-outline-secondary"
+            type="button"
+            id="search-empleado"
+            (click)="removeSelected()"
+        >
+            <i class="fa fa-times"></i>
         </button>
     </div>
+    <small *ngIf="isSelected">
+        <span>SKU: <b>{{producto!.sku}}</b></span>
+    </small>
 </div>

@@ -14,28 +14,33 @@
             [formGroup]="form"
             (submit)="save()"
         >
-            <div class="form-group">
-                <app-input-search-empleado
-                    appFeedback
-                    #empleadoGenero="appFeedback"
-                    formControlName="empleadoGenero"
-                ></app-input-search-empleado>
-                <app-feedback-error
-                    [control]="empleadoGenero.control()"
-                    fieldName="empleado"
-                ></app-feedback-error>
-            </div>
-
-            <div class="form-group">
-                <app-input-search-producto
-                    appFeedback
-                    #producto="appFeedback"
-                    formControlName="producto"
-                ></app-input-search-producto>
-                <app-feedback-error
-                    [control]="producto.control()"
-                    fieldName="producto"
-                ></app-feedback-error>
+            <div class="row">
+                <div class="col-md-6 col-sm-12">
+                    <div class="form-group">
+                        <app-input-search-empleado
+                            appFeedback
+                            #empleadoGenero="appFeedback"
+                            formControlName="empleadoGenero"
+                        ></app-input-search-empleado>
+                        <app-feedback-error
+                            [control]="empleadoGenero.control()"
+                            fieldName="empleado"
+                        ></app-feedback-error>
+                    </div>
+                </div>
+                <div class="col-md-6 col-sm-12">
+                    <div class="form-group">
+                        <app-input-search-producto
+                            appFeedback
+                            #producto="appFeedback"
+                            formControlName="producto"
+                        ></app-input-search-producto>
+                        <app-feedback-error
+                            [control]="producto.control()"
+                            fieldName="producto"
+                        ></app-feedback-error>
+                    </div>
+                </div>
             </div>
 
             <div class="row">

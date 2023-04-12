@@ -10,6 +10,10 @@
 <div class="card">
     <div class="card-body" *ngIf="poliza">
 
+        <div class="metadata">
+            <span>Creación: <b>{{ poliza.fecha }}</b></span>
+        </div>
+
         <div *ngIf="isDeleted">
             <div class="row">
                 <div class="col-md-3 col-sm-12">

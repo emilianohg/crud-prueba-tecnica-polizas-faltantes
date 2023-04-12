@@ -9,13 +9,28 @@
 
         <div class="control__container">
             <div class="control__search">
-                <input
-                    type="text"
-                    class="form-control"
-                    placeholder="Buscar por ID"
-                    (input)="changeSearch($event)"
-                    [(ngModel)]="_searchText"
-                />
+                <div class="input-group">
+                    <input
+                        type="text"
+                        class="form-control"
+                        placeholder="Buscar por ID"
+                        [(ngModel)]="_searchText"
+                        (keyup.enter)="search()"
+                    />
+                    <button
+                        class="btn btn-outline-secondary"
+                        type="button"
+                        id="search"
+                        (click)="search()"
+                    >
+                        <i class="fa fa-search"></i>
+                    </button>
+                </div>
+
+                <div class="mt-1" *ngIf="filters.search">
+                    <span>Filtrado por ID: {{ filters.search }}</span>
+                </div>
+                
             </div>
             <div class="control__buttons">
                 <a
@@ -26,6 +41,7 @@
                 </a>
             </div>
         </div>
+        
 
 
         <div *ngIf="polizas">

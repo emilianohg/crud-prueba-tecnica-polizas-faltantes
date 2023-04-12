@@ -18,6 +18,10 @@ CREATE TABLE Empleados (
 	IdPuesto INT NOT NULL FOREIGN KEY REFERENCES Puestos(IdPuesto)
 );
 
+ALTER TABLE Empleados ADD NombreCompleto AS CONCAT(Nombre, ' ', Apellido) PERSISTED;
+
+CREATE INDEX idx_Empleados_NombreCompleto ON Empleados (NombreCompleto);
+
 GO
 
 CREATE INDEX idx_Empleados_Apellido_Nombre ON Empleados (Apellido, Nombre);

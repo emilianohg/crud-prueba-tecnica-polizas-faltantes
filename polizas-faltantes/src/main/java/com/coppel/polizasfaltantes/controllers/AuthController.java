@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.coppel.polizasfaltantes.exceptions.UsuarioNoSePudoRegistrarException;
 import com.coppel.polizasfaltantes.models.JWTResponse;
 import com.coppel.polizasfaltantes.models.LoginRequest;
 import com.coppel.polizasfaltantes.models.UsuarioRegistroRequest;
@@ -35,8 +36,7 @@ public class AuthController {
         @RequestBody UsuarioRegistroRequest registerRequest
     ) {
 
-        authService.register(registerRequest)
-            .orElseThrow(() -> new RuntimeException("Ocurrio un error, el usuario no pudo ser registrado"));
+        authService.register(registerRequest);
 
         return authService.login(
             registerRequest.getEmail(),

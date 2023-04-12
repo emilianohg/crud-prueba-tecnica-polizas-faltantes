@@ -1,13 +1,11 @@
 package com.coppel.polizasfaltantes.controllers;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.Date;
-import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -58,13 +56,11 @@ public class AuthControllerTest {
         UsuarioRegistroRequest registerRequest = getRegistroRequest();
 
         Usuario usuario = getUsuario();
-        
-        Optional<Usuario> usuarioOptional = Optional.of(usuario);
 
         JWTResponse jwtResponse = getJWTResponse();
 
         when(authService.register(registerRequest))
-            .thenReturn(usuarioOptional);
+            .thenReturn(usuario);
 
         when(authService.login("test@example.com", "password"))
             .thenReturn(jwtResponse);
@@ -80,31 +76,6 @@ public class AuthControllerTest {
             authService,
             times(1)
         ).login("test@example.com", "password");
-    }
-
-
-    @Test
-    public void testRegisterThrowsException() {
-        UsuarioRegistroRequest registerRequest = getRegistroRequest();
-
-        Optional<Usuario> usuarioOptional = Optional.empty();
-
-        when(authService.register(registerRequest))
-            .thenReturn(usuarioOptional);
-
-        assertThrows(RuntimeException.class, () -> {
-            authController.register(registerRequest);
-        });
-
-        verify(
-            authService,
-            times(1)
-        ).register(registerRequest);
-
-        verify(
-            authService,
-            times(0)
-        ).login(null, null);
     }
 
     private JWTResponse getJWTResponse() {

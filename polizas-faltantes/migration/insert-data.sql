@@ -40,25 +40,3 @@ INSERT INTO Polizas
 VALUES
 (1, 2, 'SKU3', 100),
 (1, 2, 'SKU2', 500);
-
-SELECT
-        Polizas.IdPoliza,
-        Polizas.IdUsuario,
-        Polizas.IdEmpleadoGenero,
-        Empleados.Nombre as NombreEmpleadoGenero,
-        Empleados.Apellido as ApellidoEmpleadoGenero,
-        Empleados.IdPuesto as IdPuestoEmpleadoGenero,
-        Puestos.Nombre as PuestoEmpleadoGenero,
-        Polizas.SKU,
-        Inventario.Nombre as NombreProducto,
-        Polizas.Cantidad,
-        Polizas.Fecha,
-        Polizas.MotivoEliminacion,
-        Polizas.FechaEliminacion
-    FROM Polizas
-    INNER JOIN Empleados
-        ON Empleados.IdEmpleado = Polizas.IdEmpleadoGenero
-    INNER JOIN Puestos
-        ON Empleados.IdPuesto = Puestos.IdPuesto
-    INNER JOIN Inventario
-        on Polizas.SKU = Inventario.SKU

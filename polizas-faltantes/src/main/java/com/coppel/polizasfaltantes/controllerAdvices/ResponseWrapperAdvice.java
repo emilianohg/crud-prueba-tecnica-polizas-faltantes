@@ -17,11 +17,17 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.coppel.polizasfaltantes.models.Meta;
 import com.coppel.polizasfaltantes.models.ResponseWrapper;
 
+
 @ControllerAdvice
 public class ResponseWrapperAdvice implements ResponseBodyAdvice<Object> {
+
+    private static final Logger logger = LoggerFactory.getLogger(ResponseWrapperAdvice.class);
 
     @Override
     public boolean supports(
@@ -56,14 +62,17 @@ public class ResponseWrapperAdvice implements ResponseBodyAdvice<Object> {
     ) {
 
         Map<String, String> data = new HashMap<>();
+
         HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
-        String reason = ex.getMessage();
+        String reason = "Ha ocurrido un error inesperado";
 
         if (ex instanceof ResponseStatusException) {
             ResponseStatusException responseStatusException = (ResponseStatusException) ex;
 
             reason = responseStatusException.getReason();
             status = responseStatusException.getStatus();
+        } else {
+            logger.error(reason, ex);
         }
 
         data.put("message", reason);

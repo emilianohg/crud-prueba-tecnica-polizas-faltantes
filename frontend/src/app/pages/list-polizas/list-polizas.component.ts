@@ -27,7 +27,6 @@ export class ListPolizasComponent {
     limit: 10,
   };
 
-  search: Subject<string> = new Subject();
   _searchText: string = '';
   
   constructor(
@@ -46,14 +45,6 @@ export class ListPolizasComponent {
     };
 
     this.loadPolizas();
-
-    this.search.asObservable().pipe(
-      debounceTime(500),
-      distinctUntilChanged(),
-    ).subscribe((search) => {
-      this.filters.search = search;
-      this.loadPolizas();
-    });
   }
 
   loadPolizas() {
@@ -100,9 +91,9 @@ export class ListPolizasComponent {
     this.loadPolizas();
   }
 
-  changeSearch(event: any) {
-    const search = event.target.value;
-    this.search.next(search);
+  search(): void {
+    this.filters.search = this._searchText;
+    this.loadPolizas();
   }
 
   edit(poliza: Poliza) {

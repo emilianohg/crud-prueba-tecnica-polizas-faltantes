@@ -3,7 +3,7 @@ package com.coppel.polizasfaltantes.services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.coppel.polizasfaltantes.exceptions.PolizaNotFoundException;
+import com.coppel.polizasfaltantes.exceptions.polizas.PolizaNotFoundException;
 import com.coppel.polizasfaltantes.models.Pagination;
 import com.coppel.polizasfaltantes.models.Poliza;
 import com.coppel.polizasfaltantes.models.PolizaRequest;

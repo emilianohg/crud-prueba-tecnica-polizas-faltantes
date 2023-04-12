@@ -26,8 +26,6 @@ export class InputSearchProductoComponent {
   touched: boolean = false;
   searching: boolean = false;
 
-  model: any;
-
   productos: ProductoInventario[] = [];
 
   producto: ProductoInventario | undefined;
@@ -59,24 +57,37 @@ export class InputSearchProductoComponent {
 
   onSelect(event: {item: ProductoInventario, preventDefault: () => void}): void {
     event.preventDefault();
-    this.addToSelectedEmpleado(event.item);
-    this.model = '';
+    this.addToModel(event.item);
   }
 
-  onAddByText() {
-    const producto = this.productos.find((producto: ProductoInventario) => +producto.sku == +this.model);
+  onChangeText(event: any): void {
+    event.preventDefault();
+    const text = event.target.value;
 
-    if (!producto) {
+    if (text === '') {
+      this.removeSelected();
       return;
     }
 
-    this.addToSelectedEmpleado(producto);
-    this.model = '';
+    const producto = this.productos.find((producto) => {
+      return producto.nombre.toLowerCase().includes(text.toLowerCase());
+    });
+
+    if (producto) {
+      this.addToModel(producto);
+    } else {
+      this.removeSelected();
+    }
   }
 
-  addToSelectedEmpleado(producto: ProductoInventario): void {
+  addToModel(producto: ProductoInventario): void {
     this.producto = producto;
     this.onChange(producto);
+  }
+
+  removeSelected(): void {
+    this.producto = undefined;
+    this.onChange(undefined);
   }
 
   removeFromSelected(producto: ProductoInventario): void {
@@ -93,6 +104,8 @@ export class InputSearchProductoComponent {
     this.producto = producto;
   }
 
+  formatter = (producto: ProductoInventario) => producto.nombre;
+
   registerOnChange(onChange: any): void {
     this.onChange = onChange;
   }
@@ -103,5 +116,9 @@ export class InputSearchProductoComponent {
 
   setDisabledState?(isDisabled: boolean): void {
     this.isDisabled = isDisabled;
+  }
+
+  get isSelected(): boolean {
+    return typeof this.producto === 'object' && this.producto !== null;
   }
 }

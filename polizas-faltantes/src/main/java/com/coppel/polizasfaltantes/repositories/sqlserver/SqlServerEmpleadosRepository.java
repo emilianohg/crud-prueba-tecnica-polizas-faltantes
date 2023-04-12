@@ -14,6 +14,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.jdbc.core.SqlOutParameter;
 import org.springframework.jdbc.core.SqlParameter;
 
+import com.coppel.polizasfaltantes.components.SimpleJdbcCallFactory;
 import com.coppel.polizasfaltantes.models.Empleado;
 import com.coppel.polizasfaltantes.models.Pagination;
 import com.coppel.polizasfaltantes.models.Puesto;
@@ -22,23 +23,33 @@ import com.coppel.polizasfaltantes.repositories.EmpleadosRepository;
 @Repository
 public class SqlServerEmpleadosRepository implements EmpleadosRepository {
 
+    public final static int DEFAULT_LIMIT = 10;
+
+    @Autowired
+    SimpleJdbcCallFactory simpleJdbcCallFactory;
+
     @Autowired
     JdbcTemplate jdbcTemplate;
     
     @Override
     public Pagination<Empleado> getAll() {
         return this.getAll(0);
-
     }
 
     @Override
     public Pagination<Empleado> getAll(int offset) {
-        return this.getAll(offset, 10, null);
+        return this.getAll(offset, DEFAULT_LIMIT);
+    }
+
+
+    @Override
+    public Pagination<Empleado> getAll(int offset, int limit) {
+        return this.getAll(offset, limit, null);
     }
 
     @Override
     public Pagination<Empleado> getAll(int page, int limit, String buscar) {
-        SimpleJdbcCall jdbcCall = new SimpleJdbcCall(jdbcTemplate)
+        SimpleJdbcCall jdbcCall = simpleJdbcCallFactory.create(jdbcTemplate)
             .withProcedureName("Empleados_Listar")
             .declareParameters(
                 new SqlParameter("offset", Types.INTEGER),

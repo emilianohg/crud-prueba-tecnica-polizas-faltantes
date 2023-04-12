@@ -14,5 +14,4 @@ public interface PolizasRepository {
     public Optional<Poliza> store(PolizaRequest polizaRequest);
     public Optional<Poliza> update(int idPoliza, PolizaRequest polizaRequest);
     public Optional<Poliza> delete(int idPoliza, String motivoEliminacion);
-    
 }

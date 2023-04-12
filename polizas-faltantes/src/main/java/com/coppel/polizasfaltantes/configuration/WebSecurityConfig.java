@@ -23,6 +23,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
 import com.coppel.polizasfaltantes.filters.JWTAuthFilter;
+import com.coppel.polizasfaltantes.filters.LoggingFilter;
 import com.coppel.polizasfaltantes.services.UserDetailsServiceImpl;
 
 @Configuration
@@ -33,6 +34,9 @@ public class WebSecurityConfig {
 
   @Autowired
   JWTAuthFilter jwtAuthFilter;
+
+  @Autowired
+  LoggingFilter loggingFilter;
 
   @Bean
   public AuthenticationProvider authenticationProvider() {
@@ -63,7 +67,8 @@ public class WebSecurityConfig {
     
     http.authenticationProvider(authenticationProvider());
 
-    http.addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+    http.addFilterBefore(loggingFilter, UsernamePasswordAuthenticationFilter.class);
+    http.addFilterBefore(jwtAuthFilter, LoggingFilter.class);
     
     return http.build();
   }

@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.SqlOutParameter;
@@ -15,6 +16,8 @@ import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.jdbc.core.simple.SimpleJdbcCall;
 import org.springframework.stereotype.Repository;
 
+import com.coppel.polizasfaltantes.components.SimpleJdbcCallFactory;
+import com.coppel.polizasfaltantes.exceptions.polizas.PolizaDatabaseException;
 import com.coppel.polizasfaltantes.models.Empleado;
 import com.coppel.polizasfaltantes.models.Pagination;
 import com.coppel.polizasfaltantes.models.Poliza;
@@ -26,6 +29,11 @@ import com.coppel.polizasfaltantes.repositories.PolizasRepository;
 @Repository
 public class SqlServerPolizasRepository implements PolizasRepository {
 
+    public final static int DEFAULT_LIMIT = 10;
+
+    @Autowired
+    SimpleJdbcCallFactory simpleJdbcCallFactory;
+
     @Autowired
     JdbcTemplate jdbcTemplate;
 
@@ -36,12 +44,12 @@ public class SqlServerPolizasRepository implements PolizasRepository {
 
     @Override
     public Pagination<Poliza> getAll(int page) {
-        return this.getAll(page, 10);
+        return this.getAll(page, DEFAULT_LIMIT);
     }
 
     @Override
     public Pagination<Poliza> getAll(int page, int limit) {
-        SimpleJdbcCall jdbcCall = new SimpleJdbcCall(jdbcTemplate)
+        SimpleJdbcCall jdbcCall = simpleJdbcCallFactory.create(jdbcTemplate)
             .withProcedureName("Polizas_Listar")
             .declareParameters(
                 new SqlParameter("limit", Types.INTEGER),
@@ -52,7 +60,7 @@ public class SqlServerPolizasRepository implements PolizasRepository {
 
         int offset = ((page - 1) * limit);
 
-        Map<String, Object> result = jdbcCall.execute(limit, offset, null);
+        Map<String, Object> result = jdbcCall.execute(limit, offset);
 
         List<Poliza> empleados = (List<Poliza>) result.get("polizas");
         int totalRecords = (int) result.get("total");
@@ -69,7 +77,7 @@ public class SqlServerPolizasRepository implements PolizasRepository {
     public Optional<Poliza> findById(
         int idPoliza
     ) {
-        SimpleJdbcCall jdbcCall = new SimpleJdbcCall(jdbcTemplate)
+        SimpleJdbcCall jdbcCall = simpleJdbcCallFactory.create(jdbcTemplate)
             .withProcedureName("Polizas_Consultar")
             .declareParameters(
                 new SqlParameter("IdPoliza", Types.INTEGER)
@@ -88,7 +96,7 @@ public class SqlServerPolizasRepository implements PolizasRepository {
     public Optional<Poliza> store(
         PolizaRequest polizaRequest
     ) {
-        SimpleJdbcCall jdbcCall = new SimpleJdbcCall(jdbcTemplate)
+        SimpleJdbcCall jdbcCall = simpleJdbcCallFactory.create(jdbcTemplate)
             .withProcedureName("Polizas_Registrar")
             .declareParameters(
                 new SqlParameter("IdUsuario", Types.INTEGER),
@@ -99,14 +107,28 @@ public class SqlServerPolizasRepository implements PolizasRepository {
             )
             .returningResultSet("polizas", new PolizasRowMapper());
 
+        Map<String, Object> result = null;
 
-        Map<String, Object> result = jdbcCall.execute(
-            polizaRequest.getIdUsuario(),
-            polizaRequest.getIdEmpleadoGenero(),
-            polizaRequest.getSku(),
-            polizaRequest.getCantidad(),
-            polizaRequest.getObservaciones()
-        );
+        try {
+            result = jdbcCall.execute(
+                polizaRequest.getIdUsuario(),
+                polizaRequest.getIdEmpleadoGenero(),
+                polizaRequest.getSku(),
+                polizaRequest.getCantidad(),
+                polizaRequest.getObservaciones()
+            );
+        } catch (DataAccessException e) {
+            Throwable rootCause = e.getRootCause();
+            if (rootCause instanceof SQLException) {
+                int errorCode = ((SQLException) rootCause).getErrorCode();
+
+                if (errorCode > 50000) { // Errores de negocio en el procedimiento almacenado
+                    throw new PolizaDatabaseException(rootCause.getMessage());
+                }
+            }
+            
+            throw e;
+        }
 
         List<Poliza> polizas = (List<Poliza>) result.get("polizas");
 
@@ -118,7 +140,7 @@ public class SqlServerPolizasRepository implements PolizasRepository {
         int idPoliza,
         PolizaRequest polizaRequest
     ) {
-        SimpleJdbcCall jdbcCall = new SimpleJdbcCall(jdbcTemplate)
+        SimpleJdbcCall jdbcCall = simpleJdbcCallFactory.create(jdbcTemplate)
             .withProcedureName("Polizas_Actualizar")
             .declareParameters(
                 new SqlParameter("IdPoliza", Types.INTEGER),
@@ -130,15 +152,29 @@ public class SqlServerPolizasRepository implements PolizasRepository {
             )
             .returningResultSet("polizas", new PolizasRowMapper());
 
+        Map<String, Object> result;
 
-        Map<String, Object> result = jdbcCall.execute(
-            idPoliza,
-            polizaRequest.getIdUsuario(),
-            polizaRequest.getIdEmpleadoGenero(),
-            polizaRequest.getSku(),
-            polizaRequest.getCantidad(),
-            polizaRequest.getObservaciones()
-        );
+        try {
+            result = jdbcCall.execute(
+                idPoliza,
+                polizaRequest.getIdUsuario(),
+                polizaRequest.getIdEmpleadoGenero(),
+                polizaRequest.getSku(),
+                polizaRequest.getCantidad(),
+                polizaRequest.getObservaciones()
+            );
+        } catch (DataAccessException e) {
+            Throwable rootCause = e.getRootCause();
+            if (rootCause instanceof SQLException) {
+                int errorCode = ((SQLException) rootCause).getErrorCode();
+
+                if (errorCode > 50000) { // Errores de negocio en el procedimiento almacenado
+                    throw new PolizaDatabaseException(rootCause.getMessage());
+                }
+            }
+            
+            throw e;
+        }
 
         List<Poliza> polizas = (List<Poliza>) result.get("polizas");
 
@@ -151,7 +187,7 @@ public class SqlServerPolizasRepository implements PolizasRepository {
         int idPoliza,
         String motivoEliminacion
     ) {
-        SimpleJdbcCall jdbcCall = new SimpleJdbcCall(jdbcTemplate)
+        SimpleJdbcCall jdbcCall = simpleJdbcCallFactory.create(jdbcTemplate)
             .withProcedureName("Polizas_Eliminar")
             .declareParameters(
                 new SqlParameter("IdPoliza", Types.INTEGER),
@@ -159,11 +195,24 @@ public class SqlServerPolizasRepository implements PolizasRepository {
             )
             .returningResultSet("polizas", new PolizasRowMapper());
 
+            Map<String, Object> result;
+            try {
+                result = jdbcCall.execute(
+                    idPoliza,
+                    motivoEliminacion
+                );
+            } catch (DataAccessException e) {
+                Throwable rootCause = e.getRootCause();
+                if (rootCause instanceof SQLException) {
+                    int errorCode = ((SQLException) rootCause).getErrorCode();
 
-        Map<String, Object> result = jdbcCall.execute(
-            idPoliza,
-            motivoEliminacion
-        );
+                    if (errorCode > 50000) { // Errores de negocio en el procedimiento almacenado
+                        throw new PolizaDatabaseException(rootCause.getMessage());
+                    }
+                }
+                
+                throw e;
+            }
 
         List<Poliza> polizas = (List<Poliza>) result.get("polizas");
 

@@ -20,14 +20,10 @@ import { EmpleadosService } from 'src/app/services/empleados/empleados.service';
 export class InputSearchEmpleadoComponent {
   
   @ViewChild('instance', { static: true }) instance!: NgbTypeahead;
-  focus$ = new Subject<string>();
-  click$ = new Subject<string>();
 
   isDisabled: boolean = false;
   touched: boolean = false;
   searching: boolean = false;
-
-  model: any;
 
   empleados: Empleado[] = [];
 
@@ -61,18 +57,27 @@ export class InputSearchEmpleadoComponent {
   onSelect(event: {item: Empleado, preventDefault: () => void}): void {
     event.preventDefault();
     this.addToSelectedEmpleado(event.item);
-    this.model = '';
   }
 
-  onAddByText() {
-    const empleado = this.empleados.find((p: Empleado) => +p.idEmpleado === +this.model);
+  onChangeText(event: any): void {
+    event.preventDefault();
+    const text = event.target.value;
 
-    if (!empleado) {
+    if (text === '') {
+      this.removeSelected();
       return;
     }
 
-    this.addToSelectedEmpleado(empleado);
-    this.model = '';
+    const empleado = this.empleados.find((empleado) => {
+      const nombreCompleto = `${empleado.nombre} ${empleado.apellido}`;
+      return nombreCompleto.toLowerCase().includes(text.toLowerCase());
+    });
+
+    if (empleado) {
+      this.addToSelectedEmpleado(empleado);
+    } else {
+      this.removeSelected();
+    }
   }
 
   addToSelectedEmpleado(empleado: Empleado): void {
@@ -80,9 +85,8 @@ export class InputSearchEmpleadoComponent {
     this.onChange(empleado);
   }
 
-  removeFromSelected(empleado: Empleado): void {
+  removeSelected(): void {
     this.empleado = undefined;
-
     this.onChange(undefined);
   }
 
@@ -94,6 +98,8 @@ export class InputSearchEmpleadoComponent {
     this.empleado = empleado;
   }
 
+  formatter = (empleado: Empleado) => `${empleado?.nombre} ${empleado?.apellido}`;
+
   registerOnChange(onChange: any): void {
     this.onChange = onChange;
   }
@@ -104,5 +110,9 @@ export class InputSearchEmpleadoComponent {
 
   setDisabledState?(isDisabled: boolean): void {
     this.isDisabled = isDisabled;
+  }
+
+  get isSelected(): boolean {
+    return typeof this.empleado === 'object' && this.empleado !== null;
   }
 }
